@@ -4,11 +4,10 @@ const { body, validationResult } = require('express-validator');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-
-
+const fetchuser = require('../middleware/fetchuser');
 const JWT_SECRET = "montea@123";
 
-// create a user using: POST "/api/auth/createuser". Doesn't require Authentication
+// ROUTE 1 :  create a user using: POST "/api/auth/createuser". Doesn't require Authentication
 
 router.post('/createuser', [
     body('name', 'Enter a valiad name ').isLength({ min: 3 }), // Fix typo here
@@ -59,7 +58,7 @@ router.post('/createuser', [
 
 
 
-// authentication using: POST "/api/auth/login". Doesn't require Authentication
+// ROUTE 2:  authentication using: POST "/api/auth/login". Doesn't require Authentication
 
 router.post('/login', [
     body('email', 'Enter a valiad email').isEmail(),
@@ -102,4 +101,21 @@ router.post('/login', [
 
 })
 
+
+// ROUTE 3 : get user  using detail : POST "/api/auth/getuser ". require Authentication
+
+router.post('/getuser',fetchuser ,  async (req, res) => {
+try {
+    userId = req.user.id;
+    const user = await User.findById(userId).select("-password");
+    res.send(user)
+
+
+} catch (error) {
+    console.error(error.message);
+    res.status(500).send("Internal server errror")
+}
+})
+
 module.exports = router;
+
