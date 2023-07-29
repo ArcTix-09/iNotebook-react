@@ -12,7 +12,6 @@ function App() {
       <NoteState>
       <Router>
         <Navbar />
-        <h4 className='container'>This is iNotebook</h4>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
