@@ -1,3 +1,10 @@
 i{
     cursor: pointer;
 }
+
+
+.icon{
+    margin-top: 13px;
+    float: top;
+    position: relative;
+}

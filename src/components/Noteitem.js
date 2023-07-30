@@ -11,8 +11,12 @@ const Noteitem = (props) => {
                 <div class="card-body">
                     <h5 class="card-title">{note.title}</h5>
                     <p class="card-text">{note.description}</p>
+                    <span class="badge rounded-pill bg-secondary" >{note.tag}</span>
+                    <div className="icon">
                     <i class="fa-sharp fa-solid fa-pen-to-square mx-2"></i>
                     <i class="fa-solid fa-trash mx-2" onClick={()=>{deleteNote(note._id)}}></i>
+                    </div>
+                    
                 </div>
             </div>
         </div>
