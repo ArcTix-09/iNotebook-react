@@ -21,7 +21,7 @@ const NoteState = (props) => {
     setNotes(json)
   }
 
-  // Add a Note
+  // Add a Notes
   const addNote = async (title, description, tag) => {
     // TODO: API Call
     // API Call 
