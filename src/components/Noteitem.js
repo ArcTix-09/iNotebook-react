@@ -14,7 +14,7 @@ const Noteitem = (props) => {
                     <span class="badge rounded-pill bg-secondary" >{note.tag}</span>
                     <div className="icon">
                     <i class="fa-sharp fa-solid fa-pen-to-square mx-2" onClick={()=>{updateNote(note)}}></i>
-                    <i class="fa-solid fa-trash mx-2" onClick={()=>{deleteNote(note._id)}}></i>
+                    <i class="fa-solid fa-trash mx-2" onClick={()=>{deleteNote(note._id);props.showAlert("Deleted successfully", "success");}}></i>
                     </div>
                     
                 </div>

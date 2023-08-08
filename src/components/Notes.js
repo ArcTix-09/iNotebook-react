@@ -1,49 +1,56 @@
-import React, { useContext, useEffect, useRef , useState} from 'react'
-import noteContext from "../context/notes/noteContext"
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import noteContext from '../context/notes/noteContext';
 import Noteitem from './Noteitem';
 import AddNote from './AddNote';
+import { Navigate, useNavigate } from 'react-router-dom';
 
-const Notes = () => {
+const Notes = (props) => {
+  const ref = useRef(null);
+  const refClose = useRef(null);
+  const [note, setNote] = useState({ id: '', etitle: '', edescription: '', etag: '' });
 
-    const ref = useRef(null);
-    const refClose = useRef(null);
-    const [note, setNote] = useState({id:"", etitle:"" , edescription:"" , etag:""})
+  const context = useContext(noteContext);
+  const { notes, getNotes, editNote } = context;
+  const navigate = useNavigate(); // No need to declare navigate as 'let', it can be a constant.
 
-    const context = useContext(noteContext);
-    const { notes, getNotes, editNote } = context;
-    useEffect(() => {
-        getNotes()
-    }, [])
-
-    const updateNote = (currentNote) => {
-        ref.current.click();
-        setNote({id: currentNote._id , etitle:currentNote.title  , edescription:currentNote.description , etag:currentNote.tag})
+  useEffect(() => {
+    if (localStorage.getItem('token')) {
+      getNotes();
+    } else {
+      navigate('/login'); // Use the 'navigate' constant directly.
     }
+  }, []);
 
+  const updateNote = (currentNote) => {
+    ref.current.click();
+    setNote({
+      id: currentNote._id,
+      etitle: currentNote.title,
+      edescription: currentNote.description,
+      etag: currentNote.tag,
+    });
+  };
 
-    const handleClick = (e)=>{
-        console.log("Updating the note...", note)
-        editNote(note.id , note.etitle , note.edescription , note.etag);
-        refClose.current.click();
-    }
+  const handleClick = () => {
+    console.log('Updating the note...', note);
+    editNote(note.id, note.etitle, note.edescription, note.etag);
+    refClose.current.click();
+    props.showAlert('Updated successfully', 'success');
+  };
 
-    const onChange = (e) => {
-        setNote({ ...note, [e.target.name]: e.target.value });
-      }
+  const onChange = (e) => {
+    setNote((prevNote) => ({ ...prevNote, [e.target.name]: e.target.value }));
+  };
 
+  return (
+    <>
+      <AddNote showAlert={props.showAlert} />
 
+      <button type="button" className="btn btn-primary d-none" ref={ref} data-bs-toggle="modal" data-bs-target="#exampleModal">
+        Launch demo modal
+      </button>
 
-
-    return (
-        <>
-            <AddNote />
-
-            <button type="button" class="btn btn-primary d-none" ref={ref} data-bs-toggle="modal" data-bs-target="#exampleModal">
-                Launch demo modal
-            </button>
-
-
-            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -89,11 +96,12 @@ const Notes = () => {
                 </div>
                 
                 {notes.map((note) => {
-                    return <Noteitem key={note._id} updateNote={updateNote} note={note} />
+                    return <Noteitem key={note._id} updateNote={updateNote} showAlert={props.showAlert} note={note} />
                 })}
             </div>
         </>
     )
 }
 
-export default Notes
+
+export default Notes;
